@@ -4,23 +4,25 @@ Wildfly-Swarm Example using Hystrix as the circuit-breaker. This example is comp
 The Employee service responds randomly with latency and error for a fraction of requests.
 
 # Build
-mvn clean install
+
+	mvn clean install
 
 # Run
-1. Run the Employee service
-	
+Run the Employee service
+
 	cd employee-service
 	mvn wildfly-swarm:run
 
-2. Run the Payroll service
-	
+
+Run the Payroll service
+
 	cd payroll-service
 	mvn -Dswarm.port.offset=1 -Dapi.employee.endpoint=http://localhost:8080 wildfly-swarm:run
 	
 
 # Use
 
-1. Run a number of requests against the Employee endpoint
+Run a number of requests against the Employee endpoint
 
 	ab -n 10 http://localhost:8080/employees
 
@@ -39,7 +41,7 @@ mvn clean install
 
   Note the percentage requests with latencies.
 
-2. Run a number of requests against the Payroll endpoint
+Run a number of requests against the Payroll endpoint
 
 	ab -n 10 http://localhost:8081/payroll
 
@@ -56,8 +58,7 @@ mvn clean install
 	  99%   1010
 	 100%   1010 (longest request)
 
-  Run a larger number of requests and observe that the circuit-breaker closes the circuit after 
-  a certain number of failure and timeouts:
+Run a larger number of requests and observe that the circuit-breaker closes the circuit after a certain number of failure and timeouts:
 
 	ab -n 100 http://localhost:8081/payroll
 

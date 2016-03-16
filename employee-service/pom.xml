@@ -104,6 +104,11 @@
 									</inline>
 								</assembly>
 							</build>
+							<run>
+								<ports>
+									<port>http.port:8080</port>
+								</ports>
+							</run>
 						</image>
 					</images>
 				</configuration>

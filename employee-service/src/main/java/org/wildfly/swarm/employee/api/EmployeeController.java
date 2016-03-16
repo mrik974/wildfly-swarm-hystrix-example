@@ -14,9 +14,6 @@ import org.wildfly.swarm.employee.model.Employee;
 @ApplicationScoped
 @Path("/employees")
 public class EmployeeController {
-	
-	
-	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Employee> findAll() {

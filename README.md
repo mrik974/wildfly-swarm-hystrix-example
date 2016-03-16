@@ -17,7 +17,7 @@ Run the Employee service
 Run the Payroll service
 
 	cd payroll-service
-	mvn -Dswarm.port.offset=1 -Dapi.employee.endpoint=http://localhost:8080 wildfly-swarm:run
+	mvn -Dswarm.port.offset=1 -DEMPLOYEE_ENDPOINT=http://localhost:8080 wildfly-swarm:run
 	
 
 # Use

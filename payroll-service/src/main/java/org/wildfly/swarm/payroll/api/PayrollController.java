@@ -22,7 +22,8 @@ import com.netflix.hystrix.HystrixCommandProperties;
 @ApplicationScoped
 @Path("/payroll")
 public class PayrollController {
-	private static final String EMPLOYEES_ENDPOINT = System.getProperty("api.employee.endpoint", "http://localhost:8080");
+	private static final String DEFAULT_EMPLOYEE_ENDPOINT = "http://localhost:8080";
+	private static final String EMPLOYEES_ENDPOINT = Utils.getSysPropOrEnvVar("EMPLOYEE_ENDPOINT", DEFAULT_EMPLOYEE_ENDPOINT);
 	
 	public PayrollController() {
 		HystrixCommandProperties.Setter()

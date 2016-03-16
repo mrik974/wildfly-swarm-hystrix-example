@@ -2,6 +2,7 @@ package org.wildfly.swarm.payroll.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
@@ -22,9 +23,7 @@ import com.netflix.hystrix.HystrixCommandProperties;
 @ApplicationScoped
 @Path("/payroll")
 public class PayrollController {
-	private static final String DEFAULT_EMPLOYEE_ENDPOINT = "http://localhost:8080";
-	private static final String EMPLOYEES_ENDPOINT = Utils.getSysPropOrEnvVar("EMPLOYEE_ENDPOINT", DEFAULT_EMPLOYEE_ENDPOINT);
-	
+	private static Logger LOG = Logger.getLogger(PayrollController.class.getName());
 	public PayrollController() {
 		HystrixCommandProperties.Setter()
 			.withCircuitBreakerRequestVolumeThreshold(10);
@@ -49,8 +48,14 @@ public class PayrollController {
 
 		@Override
 		protected List<Employee> run() {
-			Builder request = ClientBuilder.newClient().target(EMPLOYEES_ENDPOINT + "/employees").request();
-			return request.get(new GenericType<List<Employee>>(){});
+			String url = Utils.getEmployeeEndpoint("/employees");
+			Builder request = ClientBuilder.newClient().target(url).request();
+			try {
+			 return request.get(new GenericType<List<Employee>>(){});
+			} catch (Exception e) {
+				LOG.severe("Failed to call Employee service at " + url + ": " + e.getMessage());
+				throw e;
+			}
 		}
 	}
 }

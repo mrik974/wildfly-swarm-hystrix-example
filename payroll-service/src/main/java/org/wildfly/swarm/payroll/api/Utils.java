@@ -1,17 +1,33 @@
 package org.wildfly.swarm.payroll.api;
 
+import static java.lang.System.getenv;
+
 public class Utils {
-	public static String getSysPropOrEnvVar(String key, String difault) {
-		String value = System.getProperty(key);
+	private static final String EMPLOYEE_ENDPOINT_KEY = "EMPLOYEE_ENDPOINT";
+	
+	public static String getEmployeeEndpoint(String resourcePath) {
+		String baseUrl = "";
 		
-		if (value == null || value.trim().length() == 0) {
-			value = System.getenv(key);
+		if (!isEmpty(getenv("EMPLOYEE_APP_SERVICE_HOST")) // check kubernetes service 
+				&& !isEmpty(getenv("EMPLOYEE_APP_SERVICE_PORT")))
+			baseUrl = "http://" + getenv("EMPLOYEE_APP_SERVICE_HOST") + ":" + System.getenv("EMPLOYEE_APP_SERVICE_PORT"); 
+		
+		if (isEmpty(baseUrl)) { // check system properties
+			baseUrl = System.getProperty(EMPLOYEE_ENDPOINT_KEY);
 		}
 		
-		if (value == null || value.trim().length() == 0) {
-			value = difault;
+		if (isEmpty(baseUrl)) { // check environment variables
+			baseUrl = System.getenv(EMPLOYEE_ENDPOINT_KEY);
+		}
+		
+		if (isEmpty(baseUrl)) { // default value
+			baseUrl = "http://localhost:8080";
 		} 
 		
-		return value;
+		return baseUrl + resourcePath;
+	}
+	
+	public static boolean isEmpty(String str) {
+		return str == null || str.trim().length() == 0;
 	}
 }

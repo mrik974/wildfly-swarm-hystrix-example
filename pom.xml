@@ -109,11 +109,6 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.6</version>
 				</plugin>
-<!-- 				<dependency> -->
-<!-- 					<groupId>org.jolokia</groupId> -->
-<!-- 					<artifactId>docker-maven-plugin</artifactId> -->
-<!-- 					<version>0.13.9</version> -->
-<!-- 				</dependency> -->
 				<plugin>
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>

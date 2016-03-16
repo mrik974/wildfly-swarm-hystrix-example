@@ -75,14 +75,6 @@
 			<artifactId>resteasy-client</artifactId>
 			<scope>provided</scope>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.httpcomponents</groupId> -->
-<!-- 			<artifactId>httpclient</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>commons-io</groupId> -->
-<!-- 			<artifactId>commons-io</artifactId> -->
-<!-- 		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -103,36 +95,47 @@
 					<execution>
 						<id>package</id>
 					</execution>
-					<execution>
-						<id>start</id>
-					</execution>
-					<execution>
-						<id>stop</id>
-					</execution>
-<!-- 					<execution> -->
-<!-- 						<id>multistart</id> -->
-<!-- 						<phase>pre-integration-test</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>multistart</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<processes> -->
-<!-- 								<process> -->
-<!-- 									<artifactId>wildfly-service-a</artifactId> -->
-<!-- 									<properties> -->
-<!-- 										<EMPLOYEES_ENDPOINT>http://localhost:8081</EMPLOYEES_ENDPOINT> -->
-<!-- 									</properties> -->
-<!-- 								</process> -->
-<!-- 								<process> -->
-<!-- 									<artifactId>wildfly-service-b</artifactId> -->
-<!-- 									<properties> -->
-<!-- 										<swarm.http.port>8081</swarm.http.port> -->
-<!-- 									</properties> -->
-<!-- 								</process> -->
-<!-- 							</processes> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<images>
+						<image>
+							<name>wildfly-swarm-example/${project.artifactId}:${project.version}</name>
+							<build>
+								<from>java:openjdk-8-jdk</from>
+								<maintainer>siamak@redhat.com</maintainer>
+								<tags>
+									<tag>latest</tag>
+									<tag>${project.version}</tag>
+								</tags>
+								<ports>
+									<port>8080</port>
+								</ports>
+								<entryPoint>
+									<exec>
+										<arg>java</arg>
+										<arg>-jar</arg>
+										<arg>/opt/${project.artifactId}-swarm.jar</arg>
+									</exec>
+								</entryPoint>
+								<assembly>
+									<basedir>/</basedir>
+									<inline>
+										<files>
+											<file>
+												<source>${project.build.directory}/${project.artifactId}-swarm.jar</source>
+												<outputDirectory>/opt</outputDirectory>
+											</file>
+										</files>
+									</inline>
+								</assembly>
+							</build>
+						</image>
+					</images>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

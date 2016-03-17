@@ -1,47 +1,28 @@
-# Wildfly-Swarm Hystrix Example
-Wildfly-Swarm Example using Hystrix as the circuit-breaker. This example is composed of two REST services: Employee and Payroll. The Payroll service upon invocation makes a REST call to the Employee service using Hystrix. 
+# Wildfly-Swarm Hystrix and Turbine Example
+Wildfly-Swarm Example using Hystrix as the circuit-breaker. This example is composed of:
+* Employee REST Service: a simple JAX-RS service that returns the list of employees. This service randomly generates error and timed-out responses.
+* Payroll REST Service: a simple JAX-RS service that invokes Employee service using Hystrix
+* Turbine: one of Netflix OSS components for aggregating streams of json data
+* Hystrix Dashboard: a dashboard for visualizing aggregated data streams 
 
-The Employee service responds randomly with latency and error for a fraction of requests.
+# Build Docker Images
 
-# Build
+	mvn clean install docker:build
+	
+# Run Local
 
-	mvn clean install
-
-# Run
-Run the Employee service
+Start the Employee service:
 
 	cd employee-service
 	mvn wildfly-swarm:run
 
 
-Run the Payroll service
+Start the Payroll service:
 
 	cd payroll-service
-	mvn -Dswarm.port.offset=1 -DEMPLOYEE_ENDPOINT=http://localhost:8080 wildfly-swarm:run
+	mvn -Dswarm.port.offset=1 -Dapi.employee.endpoint=http://localhost:8080 wildfly-swarm:run
 	
-
-# Use
-
-Run a number of requests against the Employee endpoint
-
-	ab -n 10 http://localhost:8080/employees
-
-  The results will be similar to the following:
-
-	Percentage of the requests served within a certain time (ms)
-	  50%      3
-	  66%      7
-	  75%    203
-	  80%   1268
-	  90%   1481
-	  95%   1481
-	  98%   1481
-	  99%   1481
-	 100%   1481 (longest request)
-
-  Note the percentage requests with latencies.
-
-Run a number of requests against the Payroll endpoint
+Generate some load on the Payroll endpoint
 
 	ab -n 10 http://localhost:8081/payroll
 
@@ -58,7 +39,7 @@ Run a number of requests against the Payroll endpoint
 	  99%   1010
 	 100%   1010 (longest request)
 
-Run a larger number of requests and observe that the circuit-breaker closes the circuit after a certain number of failure and timeouts:
+Notice the response time for various fractions of requests. Now run a larger number of requests and observe that the circuit-breaker closes the circuit after a certain number of failure and timeouts:
 
 	ab -n 100 http://localhost:8081/payroll
 
@@ -72,3 +53,63 @@ Run a larger number of requests and observe that the circuit-breaker closes the 
 	  98%   1006
 	  99%   1007
 	 100%   1007 (longest request)
+	 
+# Run on OpenShift
+
+To run this example on OpenShift, import the template and create an application based on the imported template:
+	
+	oc new-project wildfly-swarm --display-name="Wildfly Swarm Microservices"
+	oc create -f wildfly-swarm-microservices-example.json
+	oc new-app wildfly-swarm-microservices-example
+	
+A number of objects for the services and components are created within the project:
+
+	--> Deploying template wildfly-swarm-microservices-example for "wildfly-swarm-microservices-example"
+	--> Creating resources ...
+	    Service "employee-app" created
+	    Service "payroll-app" created
+	    Service "turbine" created
+	    Service "hystrix-dashboard" created
+	    Route "employee-app" created
+	    Route "payroll-app" created
+	    Route "turbine" created
+	    Route "hystrix-dashboard" created
+	    DeploymentConfig "employee-app" created
+	    DeploymentConfig "payroll-app" created
+	    DeploymentConfig "turbine" created
+	    DeploymentConfig "hystrix-dashboard" created
+	--> Success
+	    Run 'oc status' to view your app.
+	
+![Hystrix Dashboard](https://raw.githubusercontent.com/siamaksade/wildfly-swarm-hystrix-example/master/images/containers.png)
+
+
+Netflix OSS Turbine makes API calls to OpenShift in order to discover data endpoints for aggregation. Therefore the service account in your project needs to have access to cluster operations:
+	
+	oc login -u system:admin
+	oadm policy add-cluster-role-to-user cluster-admin system:serviceaccount:wildfly-swarm:default
+	
+You can test the REST services using _curl_ command:
+
+	curl http://employee-app-wildfly-swarm.10.1.2.2.xip.io/employees
+
+	[{"id":1,"name":"John"},{"id":2,"name":"Sarah"},{"id":3,"name":"Matt"},{"id":4,"name":"Linda"}]
+	
+	curl http://payroll-app-wildfly-swarm.10.1.2.2.xip.io/payroll
+	
+	{"employee":{"id":1,"name":"John"},"salary":1500,"employeeName":"John"},{"employee":{"id":2,"name":"Sarah"},"salary":3000,"employeeName":"Sarah"},{"employee":{"id":3,"name":"Matt"},"salary":4500,"employeeName":"Matt"},{"employee":{"id":4,"name":"Linda"},"salary":6000,"employeeName":"Linda"}]
+	
+If you get an "Internal Server Error" for some of the Employee requests, it's by design! The service simulates a certain ration of errors and timeouts. 
+ 
+
+# Hystrix Dashboard
+
+Hystrix Dashboard shows the status of Hystrix commands being run and the circuit state (close or open) on each endpoint.
+
+![Hystrix Dashboard](https://raw.githubusercontent.com/siamaksade/wildfly-swarm-hystrix-example/master/images/hystrix-open.png)
+
+Generate some load on the Payroll service and monitor the endpoint through Hystrix Dashboard:
+	
+	ab -n 100 http://payroll-app-wildfly-swarm.10.1.2.2.xip.io/payroll
+	
+![Hystrix Dashboard](https://raw.githubusercontent.com/siamaksade/wildfly-swarm-hystrix-example/master/images/hystrix-close.png)

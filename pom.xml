@@ -65,6 +65,8 @@
 	<modules>
 		<module>employee-service</module>
 		<module>payroll-service</module>
+		<module>turbine</module>
+		<module>hystrix-dashboard</module>
 	</modules>
 
 	<build>

@@ -192,7 +192,10 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "employee-app"
+                "name": "employee-app",
+                "labels": {
+                    "application": "wildfly-swarm-microservices-example"
+                }
             },
             "spec": {
                 "strategy": {
@@ -211,7 +214,8 @@
                     "metadata": {
                         "labels": {
                             "name": "employee-app",
-                            "deploymentConfig": "employee-app"
+                            "deploymentConfig": "employee-app",
+                            "application": "wildfly-swarm-microservices-example"
                         }
                     },
                     "spec": {
@@ -239,7 +243,10 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "payroll-app"
+                "name": "payroll-app",
+                "labels": {
+                    "application": "wildfly-swarm-microservices-example"
+                }
             },
             "spec": {
                 "strategy": {
@@ -259,7 +266,8 @@
                     "metadata": {
                         "labels": {
                             "name": "payroll-app",
-                            "deploymentConfig": "payroll-app"
+                            "deploymentConfig": "payroll-app",
+                            "application": "wildfly-swarm-microservices-example"
                         }
                     },
                     "spec": {
@@ -291,7 +299,10 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "turbine"
+                "name": "turbine",
+                "labels": {
+                    "application": "wildfly-swarm-microservices-example"
+                }
             },
             "spec": {
                 "strategy": {
@@ -311,7 +322,8 @@
                     "metadata": {
                         "labels": {
                             "name": "turbine",
-                            "deploymentConfig": "turbine"
+                            "deploymentConfig": "turbine",
+                            "application": "wildfly-swarm-microservices-example"
                         }
                     },
                     "spec": {
@@ -337,7 +349,10 @@
             "kind": "DeploymentConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "hystrix-dashboard"
+                "name": "hystrix-dashboard",
+                "labels": {
+                    "application": "wildfly-swarm-microservices-example"
+                }
             },
             "spec": {
                 "strategy": {
@@ -357,7 +372,8 @@
                     "metadata": {
                         "labels": {
                             "name": "hystrix-dashboard",
-                            "deploymentConfig": "hystrix-dashboard"
+                            "deploymentConfig": "hystrix-dashboard",
+                            "application": "wildfly-swarm-microservices-example"
                         }
                     },
                     "spec": {
@@ -379,6 +395,5 @@
                 }
             }
         }
-        
     ]
 }

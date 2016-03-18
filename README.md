@@ -1,9 +1,9 @@
 # Wildfly-Swarm Hystrix and Turbine Example
 Wildfly-Swarm Example using Hystrix as the circuit-breaker. This example is composed of:
-* Employee REST Service: a simple JAX-RS service that returns the list of employees. This service randomly generates error and timed-out responses.
-* Payroll REST Service: a simple JAX-RS service that invokes Employee service using Hystrix
-* Turbine: one of Netflix OSS components for aggregating streams of json data
-* Hystrix Dashboard: a dashboard for visualizing aggregated data streams 
+* __Employee REST Service:__ a simple JAX-RS service that returns the list of employees. This service randomly generates error and timed-out responses.
+* __Payroll REST Service:__ a simple JAX-RS service that invokes Employee service using Hystrix
+* __Turbine:__ one of Netflix OSS components for aggregating streams of json data
+* __Hystrix Dashboard:__ a dashboard for visualizing aggregated data streams 
 
 # Build Docker Images
 

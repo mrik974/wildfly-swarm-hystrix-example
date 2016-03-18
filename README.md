@@ -56,7 +56,11 @@ Notice the response time for various fractions of requests. Now run a larger num
 	 
 # Run on OpenShift
 
-To run this example on OpenShift, import the template and create an application based on the imported template:
+To run this example on OpenShift, first you should build the Docker images for all components and have them available locally. To build the images, you can take advantage of [docker-maven-plugin](https://github.com/fabric8io/docker-maven-plugin) to build a Docker image for each project. Run the following in the root project:
+
+	$ mvn install docker:build  
+
+Now that the images are ready, import the OpenShift template and create an application based on the imported template:
 	
 	$ oc new-project wildfly-swarm --display-name="Wildfly Swarm Microservices"
 	$ oc create -f wildfly-swarm-microservices-example.json

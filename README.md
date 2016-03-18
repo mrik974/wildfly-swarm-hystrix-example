@@ -2,7 +2,7 @@
 Wildfly-Swarm Example using Hystrix as the circuit-breaker. This example is composed of:
 * __Employee REST Service:__ a simple JAX-RS service that returns the list of employees. This service randomly generates error and timed-out responses.
 * __Payroll REST Service:__ a simple JAX-RS service that invokes Employee service using Hystrix
-* __Turbine:__ one of Netflix OSS components for aggregating streams of json data
+* __Turbine:__ one of Netflix components for aggregating streams of json data
 * __Hystrix Dashboard:__ a dashboard for visualizing aggregated data streams 
 
 # Build Docker Images
@@ -60,7 +60,7 @@ To run this example on OpenShift, first you should build the Docker images for a
 
 	$ mvn install docker:build  
 
-Now that the images are ready, import the OpenShift template and create an application based on the imported template:
+Now that the images are ready, import the OpenShift template wildfly-swarm-microservices-example.json and create an application based on the imported template:
 	
 	$ oc new-project wildfly-swarm --display-name="Wildfly Swarm Microservices"
 	$ oc create -f wildfly-swarm-microservices-example.json
@@ -88,7 +88,7 @@ A number of objects for the services and components are created within the proje
 ![Hystrix Dashboard](https://raw.githubusercontent.com/siamaksade/wildfly-swarm-hystrix-example/master/images/containers.png)
 
 
-Netflix OSS Turbine makes API calls to OpenShift in order to discover data endpoints for aggregation. Therefore the service account in your project needs to have access to cluster operations:
+Netflix Turbine makes API calls to OpenShift in order to discover data endpoints for aggregation. Therefore the service account in your project needs to have access to cluster operations:
 	
 	$ oc login -u system:admin
 	$ oadm policy add-cluster-role-to-user cluster-admin system:serviceaccount:wildfly-swarm:default

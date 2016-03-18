@@ -56,7 +56,7 @@ Notice the response time for various fractions of requests. Now run a larger num
 	 
 # Run on OpenShift
 
-To run this example on OpenShift, first you should build the Docker images for all components and have them available locally. To build the images, you can take advantage of [docker-maven-plugin](https://github.com/fabric8io/docker-maven-plugin) to build a Docker image for each project. Run the following in the root project:
+To run this example on OpenShift, first you should build the Docker images for all components and have them available locally on OpenShift master. To build the images, you can take advantage of [docker-maven-plugin](https://github.com/fabric8io/docker-maven-plugin) to build a Docker image for each project. Run the following in the root project:
 
 	$ mvn install docker:build  
 

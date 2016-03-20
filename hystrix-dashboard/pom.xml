@@ -9,6 +9,13 @@
 	<packaging>war</packaging>
 	<name>Netflix Hystrix Dashboard</name>
 
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<docker.group.name>wildfly-swarm-microservices-example</docker.group.name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.netflix.hystrix</groupId>

@@ -139,7 +139,7 @@
 									<inline>
 										<files>
 											<file>
-												<source>${project.build.directory}/${project.artifactId}-swarm.jar</source>
+												<source>${project.build.directory}/${project.artifactId}-${project.version}-swarm.jar</source>
 												<outputDirectory>/opt</outputDirectory>
 											</file>
 										</files>

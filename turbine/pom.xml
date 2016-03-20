@@ -70,7 +70,7 @@
 									<inline>
 										<files>
 											<file>
-												<source>${project.build.directory}/${project.artifactId}.war</source>
+												<source>${project.build.directory}/${project.artifactId}-${project.version}.war</source>
 												<outputDirectory>tomcat/webapps/</outputDirectory>
 												<destName>ROOT.war</destName>
 											</file>

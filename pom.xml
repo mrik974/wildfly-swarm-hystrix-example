@@ -20,4 +20,14 @@
 		<module>turbine</module>
 		<module>hystrix-dashboard</module>
 	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.14.1</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>

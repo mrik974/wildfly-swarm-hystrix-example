@@ -32,7 +32,7 @@ public class PayrollController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Payroll> findAll() {
-		List<Employee> employees = new CommandFindEmployees().execute();
+		List<Employee> employees = new FindEmployeesCommand().execute();
 		List<Payroll> payroll = new ArrayList<>();
 		for (Employee employee : employees) {
 			payroll.add(new Payroll(employee, employee.getId() * 1500));
@@ -41,8 +41,8 @@ public class PayrollController {
 		return payroll;
 	}
 
-	class CommandFindEmployees extends HystrixCommand<List<Employee>> {
-		public CommandFindEmployees() {
+	class FindEmployeesCommand extends HystrixCommand<List<Employee>> {
+		public FindEmployeesCommand() {
 			super(HystrixCommandGroupKey.Factory.asKey("EmployeesGroup"));
 		}
 

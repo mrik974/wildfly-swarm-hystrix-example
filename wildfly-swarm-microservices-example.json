@@ -108,7 +108,7 @@
                     "application": "wildfly-swarm-microservices-example"
                 },
                 "annotations": {
-                    "description": "Netflix Turbine"
+                    "description": "Netflix Hystrix Dashboard"
                 }
             }
         },

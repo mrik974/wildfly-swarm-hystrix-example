@@ -131,7 +131,7 @@
 									<exec>
 										<arg>java</arg>
 										<arg>-jar</arg>
-										<arg>/opt/${project.artifactId}-swarm.jar</arg>
+										<arg>/opt/${project.artifactId}-${project.version}-swarm.jar</arg>
 									</exec>
 								</entryPoint>
 								<assembly>

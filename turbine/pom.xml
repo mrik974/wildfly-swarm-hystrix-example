@@ -15,6 +15,45 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<docker.group.name>wildfly-swarm-microservices-example</docker.group.name>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>projectodd-snapshots</id>
+			<name>Project:odd Snapshots from CI</name>
+			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>projectodd-snapshots</id>
+			<name>Project:odd Snapshots from CI</name>
+			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	
 	<dependencies>
 		<dependency>

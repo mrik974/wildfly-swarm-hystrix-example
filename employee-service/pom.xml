@@ -14,51 +14,58 @@
 
 	<properties>
 		<version.jboss.spec.javaee.7.0>1.0.3.Final</version.jboss.spec.javaee.7.0>
-		<version.wildfly-swarm>1.0.0.CR1-SNAPSHOT</version.wildfly-swarm>
+		<version.wildfly-swarm>1.0.2.Final</version.wildfly-swarm>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<docker.group.name>wildfly-swarm-microservices-example</docker.group.name>
+		<docker.group.name>eap7-microservices-example</docker.group.name>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>projectodd-snapshots</id>
-			<name>Project:odd Snapshots from CI</name>
-			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	
-	<pluginRepositories>
-		<pluginRepository>
-			<id>projectodd-snapshots</id>
-			<name>Project:odd Snapshots from CI</name>
-			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+    <repositories>
+        <repository>
+            <id>jboss-developer-staging-repository</id>
+            <url>http://jboss-developer.github.io/temp-maven-repo/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>redhat-ga-repository</id>
+            <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-developer-staging-repository</id>
+            <url>http://jboss-developer.github.io/temp-maven-repo/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>redhat-ga-repository</id>
+            <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -98,65 +105,6 @@
 				<version>2.6</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.wildfly.swarm</groupId>
-				<artifactId>wildfly-swarm-plugin</artifactId>
-				<version>${version.wildfly-swarm}</version>
-				<executions>
-					<execution>
-						<id>package</id>
-						<goals>
-							<goal>package</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.14.1</version>
-				<configuration>
-					<images>
-						<image>
-							<name>${docker.group.name}/${project.artifactId}:${project.version}</name>
-							<build>
-								<from>java:openjdk-8-jdk</from>
-								<maintainer>siamak@redhat.com</maintainer>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.version}</tag>
-								</tags>
-								<ports>
-									<port>8080</port>
-								</ports>
-								<entryPoint>
-									<exec>
-										<arg>java</arg>
-										<arg>-jar</arg>
-										<arg>/opt/${project.artifactId}-${project.version}-swarm.jar</arg>
-									</exec>
-								</entryPoint>
-								<assembly>
-									<basedir>/</basedir>
-									<inline>
-										<files>
-											<file>
-												<source>${project.build.directory}/${project.artifactId}-${project.version}-swarm.jar</source>
-												<outputDirectory>/opt</outputDirectory>
-											</file>
-										</files>
-									</inline>
-								</assembly>
-							</build>
-							<run>
-								<ports>
-									<port>http.port:8080</port>
-								</ports>
-							</run>
-						</image>
-					</images>
 				</configuration>
 			</plugin>
 		</plugins>

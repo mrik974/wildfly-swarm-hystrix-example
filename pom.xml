@@ -10,7 +10,7 @@
 	<artifactId>wildfly-swarm-hystrix-example</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Wildfly Swarm Microservices Example</name>
+	<name>EAP 7 Microservices Example</name>
 
 	<packaging>pom</packaging>
 

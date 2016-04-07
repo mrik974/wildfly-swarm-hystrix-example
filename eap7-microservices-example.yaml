@@ -1,0 +1,558 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: eap7-microservices-example
+  xpaas: 1.3.0
+metadata:
+  annotations:
+    description: EAP 7 S2I Microservices Using Netflix OSS 
+    iconClass: icon-jboss
+    tags: eap,javaee,java,jboss,xpaas,netflix
+    version: 1.3.0
+  name: eap7-microservices-example
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The Employee service http port.
+    labels:
+      application: eap7-microservices-example
+    name: employee-app
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: employee-app
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The Payroll service http port.
+    labels:
+      application: eap7-microservices-example
+      hystrix.enabled: "true"
+    name: payroll-app
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: payroll-app
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Netflix Turbine
+    labels:
+      application: eap7-microservices-example
+    name: turbine
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: turbine
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Netflix Hystrix Dashboard
+    labels:
+      application: eap7-microservices-example
+    name: hystrix-dashboard
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: hystrix-dashboard
+- apiVersion: v1
+  id: employee-app
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for Employee http service.
+    labels:
+      application: eap7-microservices-example
+    name: employee-app
+  spec:
+    to:
+      name: employee-app
+- apiVersion: v1
+  id: payroll-app
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for Payroll http service.
+    labels:
+      application: eap7-microservices-example
+    name: payroll-app
+  spec:
+    to:
+      name: payroll-app
+- apiVersion: v1
+  id: turbine
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for Turbine.
+    labels:
+      application: eap7-microservices-example
+    name: turbine
+  spec:
+    to:
+      name: turbine
+- apiVersion: v1
+  id: hystrix-dashboard
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for Hystrix Dashboard.
+    labels:
+      application: eap7-microservices-example
+    name: hystrix-dashboard
+  spec:
+    to:
+      name: hystrix-dashboard
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: employee-app
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: payroll-app
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: turbine
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: hystrix-dashboard
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: employee-app
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: employee-app:latest
+    source:
+      contextDir: employee-service
+      git:
+        ref: eap7
+        uri: https://github.com/siamaksade/wildfly-swarm-hystrix-example.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        forcePull: true
+        from:
+          kind: ImageStreamTag
+          name: jboss-eap70-openshift:1.3-Beta
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: Yx9viFu9zBxcGmdN
+      type: GitHub
+    - generic:
+        secret: Yx9viFu9zBxcGmdN
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: payroll-app
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: payroll-app:latest
+    source:
+      contextDir: payroll-service
+      git:
+        ref: eap7
+        uri: https://github.com/siamaksade/wildfly-swarm-hystrix-example.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        forcePull: true
+        from:
+          kind: ImageStreamTag
+          name: jboss-eap70-openshift:1.3-Beta
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: Yx9viFu9zBxcGmdN
+      type: GitHub
+    - generic:
+        secret: Yx9viFu9zBxcGmdN
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: turbine
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: turbine:latest
+    source:
+      contextDir: turbine
+      git:
+        ref: eap7
+        uri: https://github.com/siamaksade/wildfly-swarm-hystrix-example.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        forcePull: true
+        from:
+          kind: ImageStreamTag
+          name: jboss-eap70-openshift:1.3-Beta
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: Yx9viFu9zBxcGmdN
+      type: GitHub
+    - generic:
+        secret: Yx9viFu9zBxcGmdN
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: hystrix-dashboard
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: hystrix-dashboard:latest
+    source:
+      contextDir: hystrix-dashboard
+      git:
+        ref: eap7
+        uri: https://github.com/siamaksade/wildfly-swarm-hystrix-example.git
+      type: Git
+    strategy:
+      sourceStrategy:
+        forcePull: true
+        from:
+          kind: ImageStreamTag
+          name: jboss-eap70-openshift:1.3-Beta
+          namespace: openshift
+      type: Source
+    triggers:
+    - github:
+        secret: Yx9viFu9zBxcGmdN
+      type: GitHub
+    - generic:
+        secret: Yx9viFu9zBxcGmdN
+      type: Generic
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: employee-app
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: employee-app
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: eap7-microservices-example
+          deploymentConfig: employee-app
+        name: employee-app
+      spec:
+        containers:
+        - env:
+          - name: OPENSHIFT_KUBE_PING_LABELS
+            value: application=employee-app
+          - name: OPENSHIFT_KUBE_PING_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MQ_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JGROUPS_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JAVA_OPTS
+            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          image: employee-app
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+          name: employee-app
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8888
+            name: ping
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - employee-app
+        from:
+          kind: ImageStream
+          name: employee-app
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: payroll-app
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: payroll-app
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: eap7-microservices-example
+          deploymentConfig: payroll-app
+        name: payroll-app
+      spec:
+        containers:
+        - env:
+          - name: OPENSHIFT_KUBE_PING_LABELS
+            value: application=payroll-app
+          - name: OPENSHIFT_KUBE_PING_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MQ_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JGROUPS_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JAVA_OPTS
+            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          image: payroll-app
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+          name: payroll-app
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8888
+            name: ping
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - payroll-app
+        from:
+          kind: ImageStream
+          name: payroll-app
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: turbine
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: turbine
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: eap7-microservices-example
+          deploymentConfig: turbine
+        name: turbine
+      spec:
+        containers:
+        - env:
+          - name: OPENSHIFT_KUBE_PING_LABELS
+            value: application=turbine
+          - name: OPENSHIFT_KUBE_PING_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MQ_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JGROUPS_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JAVA_OPTS
+            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          image: turbine
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+          name: turbine
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8888
+            name: ping
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - turbine
+        from:
+          kind: ImageStream
+          name: turbine
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: eap7-microservices-example
+    name: hystrix-dashboard
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: hystrix-dashboard
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: eap7-microservices-example
+          deploymentConfig: hystrix-dashboard
+        name: hystrix-dashboard
+      spec:
+        containers:
+        - env:
+          - name: OPENSHIFT_KUBE_PING_LABELS
+            value: application=hystrix-dashboard
+          - name: OPENSHIFT_KUBE_PING_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MQ_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JGROUPS_CLUSTER_PASSWORD
+            value: O5sHf97QEliXXcVv
+          - name: JAVA_OPTS
+            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          image: hystrix-dashboard
+          imagePullPolicy: Always
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/livenessProbe.sh
+          name: hystrix-dashboard
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8888
+            name: ping
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/eap/bin/readinessProbe.sh
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hystrix-dashboard
+        from:
+          kind: ImageStream
+          name: hystrix-dashboard
+      type: ImageChange
+    - type: ConfigChange

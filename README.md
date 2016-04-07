@@ -88,9 +88,8 @@ A number of objects for the services and components are created within the proje
 ![Hystrix Dashboard](https://raw.githubusercontent.com/siamaksade/wildfly-swarm-hystrix-example/master/images/containers.png)
 
 
-Netflix Turbine makes API calls to OpenShift in order to discover data endpoints for aggregation. Therefore the service account in your project needs to have read access to cluster. Run the following commands as _root_ on the _master_ to give sufficient privileges to the service account:
+Netflix Turbine makes API calls to OpenShift in order to discover data endpoints for aggregation. Therefore the service account in your project needs to have read access to cluster. Run the following command as an OpenShift cluster admin user to give sufficient privileges to the service account:
 	
-	$ oc login -u system:admin
 	$ oadm policy add-cluster-role-to-user cluster-reader system:serviceaccount:wildfly-swarm:default
 	
 You can test the REST services using _curl_ command:

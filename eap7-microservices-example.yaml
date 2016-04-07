@@ -311,8 +311,8 @@ objects:
             value: O5sHf97QEliXXcVv
           - name: JGROUPS_CLUSTER_PASSWORD
             value: O5sHf97QEliXXcVv
-          - name: JAVA_OPTS
-            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          - name: JAVA_OPTS_APPEND
+            value: -Xms512m -Xmx512m
           image: employee-app
           imagePullPolicy: Always
           livenessProbe:
@@ -380,8 +380,8 @@ objects:
             value: O5sHf97QEliXXcVv
           - name: JGROUPS_CLUSTER_PASSWORD
             value: O5sHf97QEliXXcVv
-          - name: JAVA_OPTS
-            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          - name: JAVA_OPTS_APPEND
+            value: -Xms512m -Xmx512m
           image: payroll-app
           imagePullPolicy: Always
           livenessProbe:
@@ -449,8 +449,8 @@ objects:
             value: O5sHf97QEliXXcVv
           - name: JGROUPS_CLUSTER_PASSWORD
             value: O5sHf97QEliXXcVv
-          - name: JAVA_OPTS
-            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          - name: JAVA_OPTS_APPEND
+            value: -Xms512m -Xmx512m
           image: turbine
           imagePullPolicy: Always
           livenessProbe:
@@ -518,8 +518,8 @@ objects:
             value: O5sHf97QEliXXcVv
           - name: JGROUPS_CLUSTER_PASSWORD
             value: O5sHf97QEliXXcVv
-          - name: JAVA_OPTS
-            value: -Xms512m -Xmx512m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager -Djava.awt.headless=true
+          - name: JAVA_OPTS_APPEND
+            value: -Xms512m -Xmx512m
           image: hystrix-dashboard
           imagePullPolicy: Always
           livenessProbe:

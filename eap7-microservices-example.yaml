@@ -163,7 +163,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: jboss-eap70-openshift:1.3-Beta
-          namespace: openshift
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: Source
     triggers:
     - github:
@@ -198,7 +198,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: jboss-eap70-openshift:1.3-Beta
-          namespace: openshift
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: Source
     triggers:
     - github:
@@ -233,7 +233,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: jboss-eap70-openshift:1.3-Beta
-          namespace: openshift
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: Source
     triggers:
     - github:
@@ -268,7 +268,7 @@ objects:
         from:
           kind: ImageStreamTag
           name: jboss-eap70-openshift:1.3-Beta
-          namespace: openshift
+          namespace: ${IMAGE_STREAM_NAMESPACE}
       type: Source
     triggers:
     - github:
@@ -556,3 +556,12 @@ objects:
           name: hystrix-dashboard
       type: ImageChange
     - type: ConfigChange
+parameters:
+- description: Namespace in which the ImageStreams for Red Hat Middleware images are
+    installed. These ImageStreams are normally installed in the openshift namespace.
+    You should only need to modify this if you've installed the ImageStreams in a
+    different namespace/project.
+  displayName: ImageStream Namespace
+  name: IMAGE_STREAM_NAMESPACE
+  required: true
+  value: openshift

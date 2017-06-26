@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>fr.madelink</groupId>
+  <artifactId>turbine-server</artifactId>
+  <name>Netflix Turbine</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>war</packaging>
 
-	<groupId>org.wildfly.swarm.examples</groupId>
-	<artifactId>turbine</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>Netflix Turbine</name>
+  <properties>
+    <version.wildfly.swarm>2017.6.1</version.wildfly.swarm>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <wildfly-swarm.useUberJar>true</wildfly-swarm.useUberJar>
+  </properties>
 
-	<properties>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<docker.group.name>wildfly-swarm-microservices-example</docker.group.name>
-	</properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>bom-all</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-	<repositories>
-		<repository>
-			<id>projectodd-snapshots</id>
-			<name>Project:odd Snapshots from CI</name>
-			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-plugin</artifactId>
+        <version>${version.wildfly.swarm}</version>
+        
+        <executions>
+          <execution>
+            <goals>
+              <goal>package</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>projectodd-snapshots</id>
-			<name>Project:odd Snapshots from CI</name>
-			<url>https://repository-projectodd.forge.cloudbees.com/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-	
-	<dependencies>
+  <dependencies>
+    <!-- Java EE 7 dependency -->
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- WildFly Swarm Fractions -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -72,60 +72,5 @@
 			<artifactId>openshift-client</artifactId>
 			<version>1.3.74</version>
 		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.14.1</version>
-				<configuration>
-					<images>
-						<image>
-							<name>${docker.group.name}/${project.artifactId}:${project.version}</name>
-							<build>
-								<from>tomcat:6-jre8</from>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.version}</tag>
-								</tags>
-								<ports>
-									<port>8080</port>
-								</ports>
-								<runCmds>
-									<runCmd>rm -rf /usr/local/tomcat/webapps/ROOT</runCmd>
-								</runCmds>
-								<assembly>
-									<basedir>/usr/local</basedir>
-									<inline>
-										<files>
-											<file>
-												<source>${project.build.directory}/${project.artifactId}-${project.version}.war</source>
-												<outputDirectory>tomcat/webapps/</outputDirectory>
-												<destName>ROOT.war</destName>
-											</file>
-										</files>
-									</inline>
-								</assembly>
-							</build>
-							<run>
-								<ports>
-									<port>http.port:8080</port>
-								</ports>
-							</run>
-						</image>
-					</images>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+  </dependencies>
 </project>
